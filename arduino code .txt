@@ -1,0 +1,30 @@
+ Define the analog pin connected to the MQ-135
+const int mq135Pin = A0;
+
+void setup() {
+   Start the serial communication matching the Python script's baud rate
+  Serial.begin(9600);
+  
+   Configure the sensor pin as an input
+  pinMode(mq135Pin, INPUT);
+}
+
+void loop() {
+   Read the raw analog value (0 - 1023)
+  int rawValue = analogRead(mq135Pin);
+  
+   Calculate an approximate AQI value. 
+   (Note To get true PPM, you need to calculate R0 and apply the gas curve, 
+   but for testing the architecture, dividing by 10 puts the raw analog 
+   value into a similar 20-60 range as your fake data).
+  float mockAQI = rawValue  10.0;
+  
+   Print the data in the exact format the Python script is looking for AQI = XX.XX PPM
+  Serial.print(AQI = );
+  Serial.print(mockAQI);
+  Serial.println( PPM);
+  
+   Delay for 2 seconds. The Python script will clear the buffer 
+   and grab the most recent line every 5 seconds.
+  delay(2000);
+}
